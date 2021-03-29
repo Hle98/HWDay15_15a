@@ -8,56 +8,57 @@ namespace HWDay15_15a
         static void Main(string[] args)
         {
             string word = "MITXAFEC";
-            var wordbank = new List<string> { "MTXAFEC", "AC", "TAEC", "MTAFEC", "TAC", "MITXAFEC", "A", "MTAEC", "ITXAFEC" };
-            var p = new ShrinkableWord(word, wordbank);
-            p.PrintResult(wordbank, word);
+            var wordBank = new List<string> { "MTXAFEC", "AC", "TAEC", "MTAFEC", "TAC", "MITXAFEC", "A", "MTAEC", "ITXAFEC" };
+            var p = new ShrinkableWord(word, wordBank);
+            p.PrintResult(wordBank, word);
         }
-        class ShrinkableWord
-        {
-            string _word;
-            List<string> _wordbank;
+    }
+    class ShrinkableWord
+    {
+        string _word;
+        List<string> _wordBank;
 
-            public ShrinkableWord(string word, List<string> wordbank)
+        public ShrinkableWord(string word, List<string> wordBank)
+        {
+            _word = word;
+            _wordBank = wordBank;
+        }
+        public void PrintResult(List<string> wordBank, string word)
+        {
+            var result = new Stack<string>();
+            if (IsTheWordShrinkable(wordBank, word, result))
             {
-                _word = word;
-                _wordbank = wordbank;
+                Console.Write($"Yes, {word} is shrinkable.");
             }
-            public void PrintResult(List<string> wordbank, string word)
+            else
             {
-                var result = new Stack<string>();
-                if (IsTheWordShrinkable(wordbank, word, result))
+                Console.Write($"No, {word} is unshrinkable.");
+            }
+        }
+        public bool IsTheWordShrinkable(List<string> wordBank, string word, Stack<string> result)
+        {
+            if (word.Length == 0)
+        {
+            return true;
+            }
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (wordBank.Contains(word))
                 {
-                    Console.Write($"Yes, {word} is shrinkable.");
+                    result.Push(word[i].ToString());
+                    if (IsTheWordShrinkable(wordBank, word.Remove(i, 1), result))
+                    {
+                        return true;
+                    }
+                        result.Pop();
                 }
                 else
                 {
-                    Console.Write($"No, {word} is unshrinkable.");
+                    return false;
                 }
             }
-            public bool IsTheWordShrinkable(List<string> wordbank, string word, Stack<string> result)
-            {
-                if (word.Length == 0)
-                {
-                    return true;
-                }
-                for (int i = 0; i < word.Length; i++)
-                {
-                    if (wordbank.Contains(word))
-                    {
-                        result.Push(word[i].ToString());
-                        if (IsTheWordShrinkable(wordbank, word.Remove(i, 1), result))
-                        {
-                            return true;
-                        }
-                        result.Pop();
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                return false;
-            }
+            return false;
         }
     }
 }
+
